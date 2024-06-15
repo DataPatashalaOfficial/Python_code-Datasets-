@@ -1,1 +1,53 @@
+import pandas as pd
+import numpy as np
 
+# Generating the Sales Transactions dataset with 300,000 rows and 10 different columns
+num_transactions_major = 300000
+
+sales_transactions_major = pd.DataFrame({
+    'TransactionID': np.arange(1, num_transactions_major + 1),
+    'Date': np.random.choice(pd.date_range(start='2023-01-01', end='2024-01-01', freq='D'), num_transactions_major),
+    'ProductID': np.random.choice(['P001', 'P002', 'P003', 'P004', 'P005'], num_transactions_major),
+    'CustomerID': np.random.choice(['C001', 'C002', 'C003', 'C004', 'C005'], num_transactions_major),
+    'Quantity': np.random.randint(1, 10, num_transactions_major),
+    'Price': np.random.uniform(10, 100, num_transactions_major).round(2),
+    'Discount': np.random.choice([0, 0.05, 0.10, 0.15, 0.20], num_transactions_major),
+    'TotalAmount': np.nan,  # Placeholder, to be calculated
+    'PaymentMethod': np.random.choice(['Credit Card', 'Debit Card', 'PayPal'], num_transactions_major),
+    'ShippingCost': np.random.uniform(0, 15, num_transactions_major).round(2),
+    'OrderStatus': np.random.choice(['Shipped', 'Processing', 'Delivered', 'Cancelled'], num_transactions_major)
+})
+
+sales_transactions_major['TotalAmount'] = sales_transactions_major['Quantity'] * sales_transactions_major['Price'] * (1 - sales_transactions_major['Discount'])
+
+# Generating the Customer Demographics dataset with 100,000 rows and 5 different columns
+num_customers = 100000
+
+customer_demographics_large = pd.DataFrame({
+    'CustomerID': [f'C{str(i).zfill(5)}' for i in range(1, num_customers + 1)],
+    'Name': [f'Customer{i}' for i in range(1, num_customers + 1)],
+    'Age': np.random.randint(18, 70, num_customers),
+    'Gender': np.random.choice(['Male', 'Female'], num_customers),
+    'City': np.random.choice(['New York', 'Los Angeles', 'Chicago', 'Houston', 'Phoenix'], num_customers),
+})
+
+# Generating the Product Information dataset with 100,000 rows and 5 different columns
+num_products = 100000
+
+product_information_large = pd.DataFrame({
+    'ProductID': [f'P{str(i).zfill(5)}' for i in range(1, num_products + 1)],
+    'ProductName': [f'Product{i}' for i in range(1, num_products + 1)],
+    'Category': np.random.choice(['Electronics', 'Home & Kitchen', 'Tools', 'Fashion'], num_products),
+    'UnitPrice': np.random.uniform(10, 500, num_products).round(2),
+    'StockQuantity': np.random.randint(1, 500, num_products)
+})
+
+# Saving the datasets to Excel
+file_path_large = '/mnt/data/Ecommerce_Large_Datasets.xlsx'
+
+with pd.ExcelWriter(file_path_large) as writer:
+    sales_transactions_major.to_excel(writer, sheet_name='SalesTransactions', index=False)
+    customer_demographics_large.to_excel(writer, sheet_name='CustomerDemographics', index=False)
+    product_information_large.to_excel(writer, sheet_name='ProductInformation', index=False)
+
+file_path_large
